@@ -1,1 +1,1 @@
-# SWTestingProject_gemshop
+# Software Testing Project: Jewelry Shop
