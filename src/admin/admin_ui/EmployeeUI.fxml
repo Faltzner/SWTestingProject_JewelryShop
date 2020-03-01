@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.181" xmlns:fx="http://javafx.com/fxml/1" fx:controller="admin.admin_ui.EmployeeUI">
+   <children>
+      <ImageView fitHeight="750.0" fitWidth="1200.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../pic/background.jpg" />
+         </image>
+      </ImageView>
+      <Label layoutX="200.0" layoutY="80.0" prefHeight="70.0" prefWidth="300.0" text="Employee" textAlignment="CENTER" textFill="WHITE">
+         <font>
+            <Font name="Arial Rounded MT Bold" size="56.0" />
+         </font>
+      </Label>
+      <Button layoutX="40.0" layoutY="640.0" mnemonicParsing="false" onAction="#handleBackButton" prefHeight="70.0" prefWidth="150.0" style="-fx-background-radius: 50;" text="BACK">
+         <font>
+            <Font name="Arial Rounded MT Bold" size="24.0" />
+         </font>
+      </Button>
+      <TableView fx:id="tableView" layoutX="40.0" layoutY="175.0" prefHeight="430.0" prefWidth="1120.0">
+        <columns>
+          <TableColumn fx:id="id" prefWidth="120.0" resizable="false" style="-fx-alignment: CENTER;" text="Employee ID" />
+          <TableColumn fx:id="name" prefWidth="155.0" resizable="false" style="-fx-alignment: CENTER;" text="Name" />
+            <TableColumn fx:id="numPhone" prefWidth="155.0" resizable="false" style="-fx-alignment: CENTER;" text="Phone Number" />
+            <TableColumn fx:id="password" prefWidth="155.0" resizable="false" style="-fx-alignment: CENTER;" text="Password" />
+            <TableColumn fx:id="numOfWork" prefWidth="120.0" resizable="false" style="-fx-alignment: CENTER;" text="Number Of Work" />
+            <TableColumn fx:id="necklace" prefWidth="100.0" resizable="false" style="-fx-alignment: CENTER;" text="Necklace Skill" />
+            <TableColumn fx:id="earrings" prefWidth="100.0" resizable="false" style="-fx-alignment: CENTER;" text="Earrings Skill" />
+            <TableColumn fx:id="ring" prefWidth="100.0" resizable="false" style="-fx-alignment: CENTER;" text="Ring Skill" />
+            <TableColumn fx:id="bracelet" prefWidth="100.0" resizable="false" style="-fx-alignment: CENTER;" text="Bracelet Skill" />
+        </columns>
+      </TableView>
+      <Button layoutX="1010.0" layoutY="640.0" mnemonicParsing="false" onAction="#handleAddButton" prefHeight="70.0" prefWidth="150.0" style="-fx-background-radius: 50; -fx-background-color: linear-gradient(#54ff00, #1dbe00);" text="ADD">
+         <font>
+            <Font name="Arial Rounded MT Bold" size="24.0" />
+         </font>
+      </Button>
+   </children>
+</AnchorPane>
