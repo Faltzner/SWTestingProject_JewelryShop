@@ -85,20 +85,22 @@ public class EmployeeWorkController {
     }
 
     private void workingProcess(String statusRow, String workerName, String productName) {
-        try {
-            Stage newStage = new Stage();
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/employee/employee_ui/UpdateWorkUI.fxml"));
-            newStage.initModality(Modality.APPLICATION_MODAL);
-            newStage.setScene(new Scene(loader.load()));
-            UpdateWorkUI uwui = loader.getController();
-            uwui.initializeData(collection, workIDRow, buyOrderIDRow, employeeIDRow, productName, assignedDateRow
-                    , dueDateRow, statusRow, workerName);
-            newStage.setResizable(false);
-            newStage.sizeToScene();
-            newStage.showAndWait();
-            collection.readWorkList(employeeIDRow);
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (collection.reconnect() != null) {
+            try {
+                Stage newStage = new Stage();
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/employee/employee_ui/UpdateWorkUI.fxml"));
+                newStage.initModality(Modality.APPLICATION_MODAL);
+                newStage.setScene(new Scene(loader.load()));
+                UpdateWorkUI uwui = loader.getController();
+                uwui.initializeData(collection, workIDRow, buyOrderIDRow, employeeIDRow, productName, assignedDateRow
+                        , dueDateRow, statusRow, workerName);
+                newStage.setResizable(false);
+                newStage.sizeToScene();
+                newStage.showAndWait();
+                collection.readWorkList(employeeIDRow);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 

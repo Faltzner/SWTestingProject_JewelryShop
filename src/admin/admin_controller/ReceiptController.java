@@ -40,19 +40,21 @@ public class ReceiptController {
     }
 
     public void loadCreateUI() {
-        try {
-            Stage newStage = new Stage();
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/admin/admin_ui/NewReceiptUI.fxml"));
-            newStage.initModality(Modality.APPLICATION_MODAL);
-            newStage.setScene(new Scene(loader.load()));
-            NewReceiptUI nri = loader.getController();
-            nri.initializeData(collection);
-            newStage.setResizable(false);
-            newStage.sizeToScene();
-            newStage.showAndWait();
-            collection.readReceiptList();
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (collection.reconnect() != null) {
+            try {
+                Stage newStage = new Stage();
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/admin/admin_ui/NewReceiptUI.fxml"));
+                newStage.initModality(Modality.APPLICATION_MODAL);
+                newStage.setScene(new Scene(loader.load()));
+                NewReceiptUI nri = loader.getController();
+                nri.initializeData(collection);
+                newStage.setResizable(false);
+                newStage.sizeToScene();
+                newStage.showAndWait();
+                collection.readReceiptList();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 

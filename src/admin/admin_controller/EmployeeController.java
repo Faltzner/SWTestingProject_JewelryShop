@@ -40,19 +40,21 @@ public class EmployeeController {
     }
 
     public void loadAddUI() {
-        try {
-            Stage newStage = new Stage();
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/admin/admin_ui/AddEmployeeUI.fxml"));
-            newStage.initModality(Modality.APPLICATION_MODAL);
-            newStage.setScene(new Scene(loader.load()));
-            AddEmployeeUI aei = loader.getController();
-            aei.initializeData(collection);
-            newStage.setResizable(false);
-            newStage.sizeToScene();
-            newStage.showAndWait();
-            collection.readEmployeeList();
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (collection.reconnect() != null) {
+            try {
+                Stage newStage = new Stage();
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/admin/admin_ui/AddEmployeeUI.fxml"));
+                newStage.initModality(Modality.APPLICATION_MODAL);
+                newStage.setScene(new Scene(loader.load()));
+                AddEmployeeUI aei = loader.getController();
+                aei.initializeData(collection);
+                newStage.setResizable(false);
+                newStage.sizeToScene();
+                newStage.showAndWait();
+                collection.readEmployeeList();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 

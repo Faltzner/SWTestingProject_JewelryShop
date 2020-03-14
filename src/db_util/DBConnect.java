@@ -1,4 +1,4 @@
-package sql_and_db_util;
+package db_util;
 
 import javafx.application.Platform;
 import javafx.scene.control.Alert;

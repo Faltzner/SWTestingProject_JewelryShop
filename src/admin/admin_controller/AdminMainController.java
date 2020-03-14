@@ -11,6 +11,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 @SuppressWarnings("Duplicates")
 public class AdminMainController {
@@ -22,7 +23,7 @@ public class AdminMainController {
 
     public void loadBuyOrderUI(Stage stage) {
         System.out.println("Load `Buy Order` UI...");
-        if (collection.getConnection() != null) {
+        if (collection.reconnect() != null) {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/admin/admin_ui/BuyOrderUI.fxml"));
                 stage.setScene(new Scene(loader.load()));
@@ -39,7 +40,7 @@ public class AdminMainController {
 
     public void loadWorkOrderUI(Stage stage) {
         System.out.println("Load `Work Order` UI...");
-        if (collection.getConnection() != null) {
+        if (collection.reconnect() != null) {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/admin/admin_ui/WorkOrderUI.fxml"));
                 stage.setScene(new Scene(loader.load()));
@@ -56,7 +57,7 @@ public class AdminMainController {
 
     public void loadProductUI(Stage stage) {
         System.out.println("Load `Product` UI...");
-        if (collection.getConnection() != null) {
+        if (collection.reconnect() != null) {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/admin/admin_ui/AdminProductUI.fxml"));
                 stage.setScene(new Scene(loader.load()));
@@ -73,7 +74,7 @@ public class AdminMainController {
 
     public void loadReceiptUI(Stage stage) {
         System.out.println("Load `Receipt` UI...");
-        if (collection.getConnection() != null) {
+        if (collection.reconnect() != null) {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/admin/admin_ui/ReceiptUI.fxml"));
                 stage.setScene(new Scene(loader.load()));
@@ -90,7 +91,7 @@ public class AdminMainController {
 
     public void loadEmployeeUI(Stage stage) {
         System.out.println("Load `Employee` UI...");
-        if (collection.getConnection() != null) {
+        if (collection.reconnect() != null) {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/admin/admin_ui/EmployeeUI.fxml"));
                 stage.setScene(new Scene(loader.load()));
@@ -107,8 +108,11 @@ public class AdminMainController {
 
     public void logout(Stage stage) {
         System.out.println("`Logout` Successful!");
-        if (collection.getConnection() != null) {
+        try {
+            collection.getConnection().close();
             stage.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 

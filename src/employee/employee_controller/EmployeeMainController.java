@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 @SuppressWarnings("Duplicates")
 public class EmployeeMainController {
@@ -22,7 +23,7 @@ public class EmployeeMainController {
 
     public void loadWorkOrderUI(Stage stage) {
         System.out.println("Load `Work Order` UI...");
-        if (collection.getConnection() != null) {
+        if (collection.reconnect() != null) {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/employee/employee_ui/EmployeeWorkUI.fxml"));
                 stage.setScene(new Scene(loader.load()));
@@ -39,7 +40,7 @@ public class EmployeeMainController {
 
     public void loadProductUI(Stage stage) {
         System.out.println("Load `Product` UI...");
-        if (collection.getConnection() != null) {
+        if (collection.reconnect() != null) {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/employee/employee_ui/EmployeeProductUI.fxml"));
                 stage.setScene(new Scene(loader.load()));
@@ -56,8 +57,11 @@ public class EmployeeMainController {
 
     public void logout(Stage stage) {
         System.out.println("`Logout` Successful!");
-        if (collection.getConnection() != null) {
+        try {
+            collection.getConnection().close();
             stage.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 

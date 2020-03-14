@@ -38,34 +38,38 @@ public class LoginPageController {
     }
 
     void loadAdminPage(Stage stage) {
-        try {
-            Stage newStage = new Stage();
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/admin/admin_ui/AdminMainUI.fxml"));
-            newStage.setScene(new Scene(loader.load()));
-            AdminMainUI ami = loader.getController();
-            ami.initializeData(collection);
-            newStage.setResizable(false);
-            newStage.sizeToScene();
-            stage.hide();
-            newStage.showAndWait();
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (collection.reconnect() != null) {
+            try {
+                Stage newStage = new Stage();
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/admin/admin_ui/AdminMainUI.fxml"));
+                newStage.setScene(new Scene(loader.load()));
+                AdminMainUI ami = loader.getController();
+                ami.initializeData(collection);
+                newStage.setResizable(false);
+                newStage.sizeToScene();
+                stage.hide();
+                newStage.showAndWait();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     void loadEmployeePage(Stage stage, String username) {
-        try {
-            Stage newStage = new Stage();
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/employee/employee_ui/EmployeeMainUI.fxml"));
-            newStage.setScene(new Scene(loader.load()));
-            EmployeeMainUI emi = loader.getController();
-            emi.initializeData(collection, username);
-            newStage.setResizable(false);
-            newStage.sizeToScene();
-            stage.hide();
-            newStage.showAndWait();
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (collection.reconnect() != null) {
+            try {
+                Stage newStage = new Stage();
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/employee/employee_ui/EmployeeMainUI.fxml"));
+                newStage.setScene(new Scene(loader.load()));
+                EmployeeMainUI emi = loader.getController();
+                emi.initializeData(collection, username);
+                newStage.setResizable(false);
+                newStage.sizeToScene();
+                stage.hide();
+                newStage.showAndWait();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -90,6 +94,7 @@ public class LoginPageController {
                         }
                     });
                     if (!isUserFound.get()) {
+                        collection.reconnect();
                         if (username.equals("admin") && password.equals("admin")) {
                             return "admin";
                         } else if (username.equals("admin") && !password.equals("admin")) {
@@ -100,6 +105,7 @@ public class LoginPageController {
                             return "Not Found/User not found.";
                         }
                     } else if (isUserFound.get() && isCorrectPassword.get()) {
+                        collection.reconnect();
                         return "employee";
                     } else {
                         System.out.println("Password Incorrect.");

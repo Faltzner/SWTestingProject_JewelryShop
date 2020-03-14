@@ -40,19 +40,21 @@ public class AdminProductController {
     }
 
     public void loadAddUI() {
-        try {
-            Stage newStage = new Stage();
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/admin/admin_ui/NewProductUI.fxml"));
-            newStage.initModality(Modality.APPLICATION_MODAL);
-            newStage.setScene(new Scene(loader.load()));
-            NewProductUI npi = loader.getController();
-            npi.initializeData(collection);
-            newStage.setResizable(false);
-            newStage.sizeToScene();
-            newStage.showAndWait();
-            collection.readProductList();
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (collection.reconnect() != null) {
+            try {
+                Stage newStage = new Stage();
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/admin/admin_ui/NewProductUI.fxml"));
+                newStage.initModality(Modality.APPLICATION_MODAL);
+                newStage.setScene(new Scene(loader.load()));
+                NewProductUI npi = loader.getController();
+                npi.initializeData(collection);
+                newStage.setResizable(false);
+                newStage.sizeToScene();
+                newStage.showAndWait();
+                collection.readProductList();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 

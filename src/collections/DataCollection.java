@@ -4,7 +4,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.Image;
-import sql_and_db_util.DBConnect;
+import db_util.DBConnect;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -25,7 +25,6 @@ public class DataCollection {
     private ObservableList<Receipt> receiptList;
 
     public DataCollection() {
-        connection = DBConnect.connect();
         employeeList = FXCollections.observableArrayList();
         buyOrderList = FXCollections.observableArrayList();
         workList = FXCollections.observableArrayList();
@@ -33,19 +32,22 @@ public class DataCollection {
         receiptList = FXCollections.observableArrayList();
     }
 
-    public void reconnect() {
+    public Connection reconnect() {
         connection = DBConnect.connect();
+        return this.connection;
     }
 
     public void readEmployeeList() {
         employeeList.clear();
         try {
+            this.reconnect();
             statement = connection.prepareStatement("SELECT * FROM `employee`");
             rs = statement.executeQuery();
             while (rs.next()) {
                 employeeList.add(new Employee(rs.getString(1), rs.getString(2),
                         rs.getString(3), rs.getString(4), rs.getInt(5)));
             }
+            connection.close();
             readSkill();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -54,6 +56,7 @@ public class DataCollection {
 
     private void readSkill() {
         try {
+            this.reconnect();
             statement = connection.prepareStatement("SELECT * FROM `skill`");
             rs = statement.executeQuery();
             while (rs.next()) {
@@ -70,6 +73,7 @@ public class DataCollection {
                     }
                 });
             }
+            connection.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -78,6 +82,7 @@ public class DataCollection {
     public void readBuyOrderList() {
         buyOrderList.clear();
         try {
+            this.reconnect();
             statement = connection.prepareStatement("SELECT * FROM `buyorder`");
             rs = statement.executeQuery();
             while (rs.next()) {
@@ -85,6 +90,7 @@ public class DataCollection {
                         rs.getInt(3), rs.getInt(4), rs.getDate(5),
                         rs.getDate(6), rs.getInt(7), rs.getInt(8)));
             }
+            connection.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -102,6 +108,7 @@ public class DataCollection {
             personClass = "employee";
         }
         try {
+            this.reconnect();
             statement = connection.prepareStatement(query);
             rs = statement.executeQuery();
             ResultSet tempRS = rs;
@@ -124,6 +131,7 @@ public class DataCollection {
                             employeeName, productName));
                 }
             }
+            connection.close();
         } catch (SQLException | IOException e) {
             e.printStackTrace();
         }
@@ -132,6 +140,7 @@ public class DataCollection {
     public void readProductList() {
         productList.clear();
         try {
+            this.reconnect();
             statement = connection.prepareStatement("SELECT * FROM `product`");
             rs = statement.executeQuery();
             while (rs.next()) {
@@ -145,6 +154,7 @@ public class DataCollection {
 
                 input.close();
             }
+            connection.close();
         } catch (SQLException | IOException e) {
             e.printStackTrace();
         }
@@ -153,12 +163,14 @@ public class DataCollection {
     public void readReceiptList() {
         receiptList.clear();
         try {
+            this.reconnect();
             statement = connection.prepareStatement("SELECT * FROM `receipt`");
             rs = statement.executeQuery();
             while (rs.next()) {
                 receiptList.add(new Receipt(rs.getString(1), rs.getInt(2),
                         rs.getDate(3), rs.getString(4)));
             }
+            connection.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -169,6 +181,7 @@ public class DataCollection {
         try {
             String query = "INSERT INTO `buyorder` (buyorderID, productID, Quantity, price, assignedDate, dueDate, assignednum, status)"
                     + " values (?, ?, ?, ?, ?, ?, ?, ?)";
+            this.reconnect();
             statement = connection.prepareStatement(query);
             statement.setString(1, buyOrderID);
             statement.setString(2, productID);
@@ -180,6 +193,7 @@ public class DataCollection {
             statement.setInt(8, status);
 
             statement.execute();
+            connection.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -190,6 +204,7 @@ public class DataCollection {
         try {
             String query = "INSERT INTO `workorder` (workID, employeeID, productID, buyorderID, assignedDate, dueDate"
                     + ", status, workpic) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+            this.reconnect();
             statement = connection.prepareStatement(query);
             statement.setString(1, workID);
             statement.setString(2, employeeID);
@@ -201,6 +216,7 @@ public class DataCollection {
             statement.setBlob(8, connection.createBlob());
 
             statement.execute();
+            connection.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -210,6 +226,7 @@ public class DataCollection {
         int sumPrice =  quantity * price;
         try {
             String query = "INSERT INTO `receipt` (receiptID, totalprice, date, buyorderID) VALUES (?, ?, ?, ?)";
+            this.reconnect();
             statement = connection.prepareStatement(query);
             statement.setString(1, receiptID);
             statement.setInt(2, sumPrice);
@@ -217,6 +234,7 @@ public class DataCollection {
             statement.setString(4, buyOrderID);
 
             statement.execute();
+            connection.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -235,6 +253,7 @@ public class DataCollection {
             Blob blobImage = connection.createBlob();
             blobImage.setBytes(1, res);
 
+            this.reconnect();
             statement = connection.prepareStatement(query);
             statement.setString(1, id);
             statement.setString(2, name);
@@ -244,6 +263,7 @@ public class DataCollection {
             statement.setBlob(6, blobImage);
 
             statement.execute();
+            connection.close();
         } catch (SQLException | IOException e) {
             e.printStackTrace();
         }
@@ -253,6 +273,7 @@ public class DataCollection {
         try {
             String query = "INSERT INTO `employee` (employeeID, name, phone, password, NumOfWork)"
                     + "VALUES (?, ?, ?, ?, ?)";
+            this.reconnect();
             statement = connection.prepareStatement(query);
             statement.setString(1, id);
             statement.setString(2, name);
@@ -261,6 +282,7 @@ public class DataCollection {
             statement.setInt(5,0);
 
             statement.execute();
+            connection.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -270,6 +292,7 @@ public class DataCollection {
         try {
             String query = "INSERT INTO `skill` (employeeID, necklace, earrings, ring, bracelet)"
                     + "VALUES (?, ?, ?, ?, ?)";
+            this.reconnect();
             statement = connection.prepareStatement(query);
             statement.setString(1, id);
             statement.setInt(2, necklaceSkill);
@@ -278,6 +301,7 @@ public class DataCollection {
             statement.setInt(5, braceletSkill);
 
             statement.execute();
+            connection.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -285,15 +309,17 @@ public class DataCollection {
 
     public void updateBuyOrderAssigned(String orderID, String work) {
         try {
+            String query;
             if (work.equals("1")) {
-                String query = "UPDATE `buyorder` SET assignednum = assignednum + 1 WHERE buyorderID = '" + orderID + "'";
-                statement = connection.prepareStatement(query);
-                statement.execute();
-            } else if (work.equals("-1")) {
-                String query = "UPDATE `buyorder` SET assignednum = assignednum - 1 WHERE buyorderID = '" + orderID + "'";
-                statement = connection.prepareStatement(query);
-                statement.execute();
+                query = "UPDATE `buyorder` SET assignednum = assignednum + 1 WHERE buyorderID = '" + orderID + "'";
+            } else {
+                query = "UPDATE `buyorder` SET assignednum = assignednum - 1 WHERE buyorderID = '" + orderID + "'";
             }
+
+            this.reconnect();
+            statement = connection.prepareStatement(query);
+            statement.execute();
+            connection.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -302,8 +328,10 @@ public class DataCollection {
     public void updateBuyOrderStatus(String buyOrderID) {
         try {
             String query = "UPDATE `buyorder` SET status = status + 1 WHERE buyorderID = '" + buyOrderID + "'";
+            this.reconnect();
             statement = connection.prepareStatement(query);
             statement.execute();
+            connection.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -312,8 +340,10 @@ public class DataCollection {
     public void updateWorkOrder(String id, String status) {
         try {
             String query = "UPDATE `workorder` SET status = '" + status + "' WHERE workID = '" + id + "'";
+            this.reconnect();
             statement = connection.prepareStatement(query);
             statement.execute();
+            connection.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -321,20 +351,20 @@ public class DataCollection {
 
     public void updateWorkOrderPic(Image image, String fileType, String id) {
         try {
-            String query = "UPDATE `workorder` SET workpic = ? WHERE workID = '" + id + "'";
-            statement = connection.prepareStatement(query);
-
             BufferedImage bufferedImage = SwingFXUtils.fromFXImage(image, null);
             ByteArrayOutputStream s = new ByteArrayOutputStream();
             ImageIO.write(bufferedImage, fileType, s);
             byte[] res = s.toByteArray();
 
+            String query = "UPDATE `workorder` SET workpic = ? WHERE workID = '" + id + "'";
+            this.reconnect();
+            statement = connection.prepareStatement(query);
             Blob blobImage = connection.createBlob();
             blobImage.setBytes(1, res);
-
             statement.setBlob(1, blobImage);
 
             statement.execute();
+            connection.close();
         } catch (SQLException | IOException e) {
             e.printStackTrace();
         }
@@ -342,15 +372,17 @@ public class DataCollection {
 
     public void updateEmployee(String employeeID, String work) {
         try {
+            String query;
             if (work.equals("1")) {
-                String query = "UPDATE `employee` SET NumOfWork = NumOfWork + 1 WHERE employeeID = '" + employeeID + "'";
-                statement = connection.prepareStatement(query);
-                statement.execute();
-            } else if (work.equals("-1")) {
-                String query = "UPDATE `employee` SET NumOfWork = NumOfWork - 1 WHERE employeeID = '" + employeeID + "'";
-                statement = connection.prepareStatement(query);
-                statement.execute();
+                query = "UPDATE `employee` SET NumOfWork = NumOfWork + 1 WHERE employeeID = '" + employeeID + "'";
+            } else {
+                query = "UPDATE `employee` SET NumOfWork = NumOfWork - 1 WHERE employeeID = '" + employeeID + "'";
             }
+
+            this.reconnect();
+            statement = connection.prepareStatement(query);
+            statement.execute();
+            connection.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -359,8 +391,10 @@ public class DataCollection {
     public void deleteWorkOrder(String workID) {
         try {
             String query = "DELETE FROM `workorder` WHERE workID = '" + workID + "'";
+            this.reconnect();
             statement = connection.prepareStatement(query);
             statement.execute();
+            connection.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -369,6 +403,7 @@ public class DataCollection {
     public String getEmployeeName(String employeeID) {
         try {
             String query = "SELECT `name` FROM `employee` WHERE employeeID = '" + employeeID + "'";
+            this.reconnect();
             statement = connection.prepareStatement(query);
             rs = statement.executeQuery();
             if (rs.next()) {
@@ -383,6 +418,7 @@ public class DataCollection {
     public String getProductName(String productID) {
         try {
             String query = "SELECT `name` FROM `product` WHERE productID = '" + productID + "'";
+            this.reconnect();
             statement = connection.prepareStatement(query);
             rs = statement.executeQuery();
             if (rs.next()) {

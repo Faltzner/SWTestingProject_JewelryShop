@@ -46,19 +46,21 @@ public class WorkOrderController {
     }
 
     public void loadCreateUI() {
-        try {
-            Stage newStage = new Stage();
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/admin/admin_ui/NewWorkOrderUI.fxml"));
-            newStage.initModality(Modality.APPLICATION_MODAL);
-            newStage.setScene(new Scene(loader.load()));
-            NewWorkOrderUI nwoi = loader.getController();
-            nwoi.initializeData(collection);
-            newStage.setResizable(false);
-            newStage.sizeToScene();
-            newStage.showAndWait();
-            collection.readWorkList("admin");
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (collection.reconnect() != null) {
+            try {
+                Stage newStage = new Stage();
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/admin/admin_ui/NewWorkOrderUI.fxml"));
+                newStage.initModality(Modality.APPLICATION_MODAL);
+                newStage.setScene(new Scene(loader.load()));
+                NewWorkOrderUI nwoi = loader.getController();
+                nwoi.initializeData(collection);
+                newStage.setResizable(false);
+                newStage.sizeToScene();
+                newStage.showAndWait();
+                collection.readWorkList("admin");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -89,20 +91,22 @@ public class WorkOrderController {
     }
 
     private void workChecking(Image image, String statusRow, String workerName, String productName) {
-        try {
-            Stage newStage = new Stage();
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/admin/admin_ui/CheckWorkUI.fxml"));
-            newStage.initModality(Modality.APPLICATION_MODAL);
-            newStage.setScene(new Scene(loader.load()));
-            CheckWorkUI cwui = loader.getController();
-            cwui.initializeData(collection, workIDRow, buyOrderIDRow, employeeIDRow, productName, assignedDateRow
-                    , dueDateRow, statusRow, image, workerName);
-            newStage.setResizable(false);
-            newStage.sizeToScene();
-            newStage.showAndWait();
-            collection.readWorkList("admin");
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (collection.reconnect() != null) {
+            try {
+                Stage newStage = new Stage();
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/admin/admin_ui/CheckWorkUI.fxml"));
+                newStage.initModality(Modality.APPLICATION_MODAL);
+                newStage.setScene(new Scene(loader.load()));
+                CheckWorkUI cwui = loader.getController();
+                cwui.initializeData(collection, workIDRow, buyOrderIDRow, employeeIDRow, productName, assignedDateRow
+                        , dueDateRow, statusRow, image, workerName);
+                newStage.setResizable(false);
+                newStage.sizeToScene();
+                newStage.showAndWait();
+                collection.readWorkList("admin");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
